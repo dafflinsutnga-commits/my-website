@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Saints of Light</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0c1a;--sur:#1a1630;--card:#1e1a35;--bdr:#2e2a4a;--ac:#c9a84c;--ac2:#e8c97a;--tx:#f0eaff;--mt:#9b92b8;--r:14px}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,#1e1640,transparent 60%),radial-gradient(ellipse at 80% 80%,#1a1230,transparent 60%);pointer-events:none;z-index:0}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(15,12,26,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;padding:0.8rem 2rem;flex-wrap:wrap;gap:0.5rem}
+.logo{font-size:1.15rem;font-weight:800;color:var(--ac2);text-decoration:none}
+.nav-links{display:flex;gap:1.5rem;list-style:none}
+.nav-links a{color:var(--mt);text-decoration:none;font-size:0.85rem;transition:color .2s}
+.nav-links a:hover{color:var(--ac2)}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;position:relative;z-index:1}
+.halo{font-size:3.5rem;margin-bottom:1rem;filter:drop-shadow(0 0 24px #c9a84c88)}
+h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;letter-spacing:-1px;line-height:1.1}
+h1 em{font-style:normal;color:var(--ac2)}
+.hero-sub{color:var(--mt);max-width:540px;margin:1rem auto 1.8rem;font-size:1rem;line-height:1.7}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;margin-bottom:2rem;flex-wrap:wrap}
+.hs-n{font-size:1.8rem;font-weight:900;color:var(--ac2)}
+.hs-l{font-size:0.7rem;color:var(--mt);text-transform:uppercase;letter-spacing:1px}
+.cta{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,#c9a84c,#e8c97a);color:#0f0c1a;font-weight:700;padding:.85rem 2.2rem;border-radius:999px;text-decoration:none;font-size:.95rem;box-shadow:0 4px 20px #c9a84c44;transition:transform .2s}
+.cta:hover{transform:translateY(-2px)}
+
+/* SOTD */
+#sotd{max-width:960px;margin:0 auto;padding:2.5rem 2rem 0;position:relative;z-index:1}
+.sotd-box{background:linear-gradient(135deg,#1e1a35,#2a1f45);border:1px solid var(--ac);border-radius:18px;padding:1.8rem;display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap}
+.sotd-img,.sotd-ph{width:90px;height:90px;border-radius:12px;flex-shrink:0;border:2px solid var(--ac);object-fit:cover}
+.sotd-ph{display:flex;align-items:center;justify-content:center;font-size:2.8rem;background:var(--card)}
+.sotd-badge{background:var(--ac);color:#0f0c1a;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:.3rem .8rem;border-radius:999px;margin-bottom:.7rem;display:inline-block}
+.sotd-name{font-size:1.25rem;font-weight:800;margin-bottom:.2rem}
+.sotd-feast{color:var(--ac);font-size:.8rem;font-weight:600;margin-bottom:.5rem}
+.sotd-snip{color:var(--mt);font-size:.88rem;line-height:1.6;margin-bottom:.8rem}
+.sotd-btn{background:var(--ac);color:#0f0c1a;font-weight:700;padding:.5rem 1.2rem;border-radius:999px;font-size:.8rem;cursor:pointer;border:none}
+
+/* GALLERY */
+#gallery{padding:3.5rem 2rem;max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.sec-hd{text-align:center;margin-bottom:2rem}
+.sec-hd small{color:var(--ac);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;display:block;margin-bottom:.4rem}
+.sec-hd h2{font-size:1.9rem;font-weight:800}
+.controls{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;justify-content:center;margin-bottom:1.8rem}
+.sw{position:relative;flex:1;min-width:220px;max-width:400px}
+.sw input{width:100%;padding:.75rem 1rem .75rem 2.6rem;background:var(--card);border:1px solid var(--bdr);border-radius:999px;color:var(--tx);font-size:.88rem;outline:none;transition:border-color .2s}
+.sw input:focus{border-color:var(--ac)}
+.sw input::placeholder{color:var(--mt)}
+.sw .ic{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--mt);pointer-events:none}
+.filters{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}
+.fb{padding:.38rem .9rem;border-radius:999px;border:1px solid var(--bdr);background:var(--card);color:var(--mt);font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s}
+.fb:hover,.fb.on{background:var(--ac);border-color:var(--ac);color:#0f0c1a}
+.clbl{text-align:center;color:var(--mt);font-size:.8rem;margin-bottom:1.2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:1rem}
+.sc{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s}
+.sc:hover{transform:translateY(-4px);box-shadow:0 10px 30px #00000066;border-color:var(--ac)}
+.ci{width:100%;height:130px;object-fit:cover;display:block}
+.cp{width:100%;height:130px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,#221e38,#2e2850)}
+.cb{padding:.9rem}
+.cb-cat{display:inline-block;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:.18rem .5rem;border-radius:999px;margin-bottom:.4rem}
+.cb-name{font-weight:700;font-size:.85rem;line-height:1.3;margin-bottom:.18rem}
+.cb-feast{font-size:.68rem;color:var(--ac);font-weight:600}
+.cb-tag{font-size:.65rem;color:var(--mt);margin-top:.15rem;line-height:1.3}
+.ca{background:#1e3a5f;color:#60a5fa}.cm{background:#3b1a1a;color:#f87171}
+.cd{background:#1a2e1a;color:#4ade80}.cmy{background:#2d1a3b;color:#c084fc}
+.cf{background:#2d2a10;color:#facc15}.cp2{background:#1e2a3b;color:#7dd3fc}
+.cmo{background:#1a2d2d;color:#34d399}.cpr{background:#2d1a20;color:#fb7185}
+.cv{background:#2d1a2d;color:#f0abfc}.cbi{background:#1a1e2d;color:#93c5fd}
+
+/* PRAYERS */
+#prayers{padding:3.5rem 2rem;max-width:900px;margin:0 auto;position:relative;z-index:1}
+.ptabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.pt{padding:.45rem 1.1rem;border-radius:999px;border:1px solid var(--bdr);background:var(--card);color:var(--mt);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s}
+.pt.on{background:var(--ac);border-color:var(--ac);color:#0f0c1a}
+.pan{display:none}.pan.on{display:block}
+.pbox{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
+.ptit{font-size:1rem;font-weight:700;color:var(--ac2);margin-bottom:.8rem}
+.ptxt{color:#cdc6e8;line-height:2;font-size:.92rem}
+.ptxt em{color:var(--ac);font-style:normal;font-weight:600}
+.nday{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:1.1rem;margin-bottom:.7rem;cursor:pointer;transition:border-color .2s}
+.nday:hover,.nday.open{border-color:var(--ac)}
+.nday-hd{display:flex;justify-content:space-between;align-items:center}
+.nday-t{font-weight:700;font-size:.9rem;color:var(--ac2)}
+.nday-s{font-size:.72rem;color:var(--mt);margin-top:.18rem}
+.nday-body{display:none;margin-top:.9rem;color:#cdc6e8;font-size:.88rem;line-height:1.85}
+.nday.open .nday-body{display:block}
+.nsel{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.nsb{padding:.38rem .9rem;border-radius:999px;border:1px solid var(--bdr);background:var(--card);color:var(--mt);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s}
+.nsb:hover,.nsb.on{background:var(--ac);border-color:var(--ac);color:#0f0c1a}
+.gbtn{background:linear-gradient(135deg,#c9a84c,#e8c97a);color:#0f0c1a;font-weight:700;padding:.65rem 1.5rem;border-radius:999px;border:none;font-size:.88rem;cursor:pointer;transition:transform .2s}
+.gbtn:hover{transform:translateY(-1px)}
+
+/* MODAL */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:flex-start;justify-content:center;padding:1rem;backdrop-filter:blur(6px);overflow-y:auto}
+.ov.on{display:flex}
+.modal{background:var(--sur);border:1px solid var(--bdr);border-radius:20px;max-width:680px;width:100%;margin:2rem auto}
+.mh{position:relative;height:240px;overflow:hidden;border-radius:20px 20px 0 0}
+.mh img{width:100%;height:100%;object-fit:cover}
+.mhph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:5.5rem;background:linear-gradient(135deg,#221e38,#2e2850)}
+.mhov{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,22,48,1) 0%,rgba(26,22,48,.15) 55%,transparent 100%)}
+.mhinfo{position:absolute;bottom:1.2rem;left:1.6rem;right:3.5rem}
+.mhname{font-size:1.6rem;font-weight:900;line-height:1.1;margin-bottom:.25rem}
+.mhfeast{color:var(--ac);font-size:.8rem;font-weight:600}
+.mclose{position:absolute;top:.9rem;right:.9rem;z-index:10;background:rgba(0,0,0,.6);border:1px solid var(--bdr);color:var(--tx);border-radius:999px;width:32px;height:32px;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mbody{padding:1.5rem 1.8rem 2rem}
+.mquote{border-left:3px solid var(--ac);padding:.8rem 1rem;background:var(--card);border-radius:0 8px 8px 0;color:var(--ac2);font-style:italic;margin:.8rem 0 1.3rem;font-size:.9rem;line-height:1.7}
+.ss{margin-bottom:1.2rem}
+.ss h4{color:var(--ac2);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:.5rem}
+.ss p{color:#cdc6e8;line-height:1.9;font-size:.9rem}
+.mfacts{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:1.3rem}
+.fb2{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:.8rem;text-align:center}
+.fl{font-size:.65rem;color:var(--mt);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.25rem}
+.fv{font-size:.85rem;font-weight:600}
+.spin-wrap{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:3rem;color:var(--mt)}
+.spin{width:36px;height:36px;border:3px solid var(--bdr);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+footer{text-align:center;padding:2rem;border-top:1px solid var(--bdr);color:var(--mt);font-size:.82rem;position:relative;z-index:1;margin-top:1rem}
+footer span{color:var(--ac)}
+@media(max-width:600px){nav{padding:.7rem 1rem}.mbody{padding:1.1rem}.grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">✦ Saints of Light</a>
+  <ul class="nav-links">
+    <li><a href="#sotd">Saint of the Day</a></li>
+    <li><a href="#gallery">Saints</a></li>
+    <li><a href="#prayers">Prayers</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="halo">☩</div>
+  <h1>Lives of the <em>Holy Saints</em></h1>
+  <p class="hero-sub">Discover the inspiring stories of 200+ Christian saints — their faith, miracles, trials, and the eternal light they left for the world.</p>
+  <div class="hero-stats">
+    <div><div class="hs-n">200+</div><div class="hs-l">Saints</div></div>
+    <div><div class="hs-n">10</div><div class="hs-l">Categories</div></div>
+    <div><div class="hs-n">9</div><div class="hs-l">Novena Days</div></div>
+  </div>
+  <a href="#gallery" class="cta">✦ Explore Saints</a>
+</section>
+
+<!-- SAINT OF THE DAY -->
+<section id="sotd">
+  <div class="sotd-box">
+    <div class="sotd-ph" id="sotdImg">✦</div>
+    <div>
+      <span class="sotd-badge">✦ Saint of the Day</span>
+      <div class="sotd-name" id="sotdName">—</div>
+      <div class="sotd-feast" id="sotdFeast"></div>
+      <div class="sotd-snip" id="sotdSnip"></div>
+      <button class="sotd-btn" id="sotdBtn">Read Full Story →</button>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="sec-hd"><small>Holy Men & Women of God</small><h2>The Saints</h2></div>
+  <div class="controls">
+    <div class="sw"><span class="ic">🔍</span><input id="search" type="text" placeholder="Search by name, feast day, or category…" oninput="filterSaints()"/></div>
+    <div class="filters" id="filters"></div>
+  </div>
+  <p class="clbl" id="clbl"></p>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- PRAYERS -->
+<section id="prayers">
+  <div class="sec-hd"><small>Devotional</small><h2>Prayers & Novena</h2></div>
+  <div class="ptabs">
+    <button class="pt on" onclick="showTab('classic',this)">Classic Prayers</button>
+    <button class="pt" onclick="showTab('novena',this)">Novena Generator</button>
+    <button class="pt" onclick="showTab('litany',this)">Litany of Saints</button>
+  </div>
+  <div class="pan on" id="pan-classic">
+    <div class="pbox"><div class="ptit">✦ Hail Mary</div><div class="ptxt"><em>Hail Mary,</em> full of grace,<br>the Lord is with thee.<br>Blessed art thou among women,<br>and blessed is the fruit of thy womb, Jesus.<br><em>Holy Mary, Mother of God,</em><br>pray for us sinners,<br>now and at the hour of our death.<br><em>Amen.</em></div></div>
+    <div class="pbox"><div class="ptit">✦ Our Father</div><div class="ptxt"><em>Our Father,</em> who art in heaven,<br>hallowed be Thy name;<br>Thy kingdom come; Thy will be done on earth as it is in heaven.<br>Give us this day our daily bread;<br>and forgive us our trespasses as we forgive those who trespass against us;<br>and lead us not into temptation, but deliver us from evil.<br><em>Amen.</em></div></div>
+    <div class="pbox"><div class="ptit">✦ Glory Be</div><div class="ptxt"><em>Glory be to the Father,</em> and to the Son, and to the Holy Spirit;<br>as it was in the beginning, is now, and ever shall be,<br>world without end. <em>Amen.</em></div></div>
+    <div class="pbox"><div class="ptit">✦ Memorare</div><div class="ptxt"><em>Remember, O most gracious Virgin Mary,</em> that never was it known that anyone who fled to Thy protection, implored Thy help, or sought Thy intercession was left unaided. Inspired by this confidence, I fly unto Thee, O Virgin of Virgins, my Mother. To Thee I come; before Thee I stand, sinful and sorrowful. O Mother of the Word Incarnate, despise not my petitions, but in Thy mercy hear and answer me. <em>Amen.</em></div></div>
+    <div class="pbox"><div class="ptit">✦ Act of Contrition</div><div class="ptxt"><em>O my God,</em> I am heartily sorry for having offended Thee, and I detest all my sins because of Thy just punishments, but most of all because they offend Thee, my God, who art all good and deserving of all my love. I firmly resolve, with the help of Thy grace, to sin no more and to avoid the near occasions of sin. <em>Amen.</em></div></div>
+    <div class="pbox"><div class="ptit">✦ Anima Christi</div><div class="ptxt"><em>Soul of Christ,</em> sanctify me.<br>Body of Christ, save me.<br>Blood of Christ, inebriate me.<br>Water from the side of Christ, wash me.<br>Passion of Christ, strengthen me.<br>O Good Jesus, hear me.<br>Within Thy wounds hide me.<br>Suffer me not to be separated from Thee.<br>From the malicious enemy defend me.<br>In the hour of my death call me,<br>and bid me come unto Thee,<br>that I may praise Thee with all Thy saints forever. <em>Amen.</em></div></div>
+  </div>
+  <div class="pan" id="pan-novena">
+    <p style="color:var(--mt);font-size:.88rem;margin-bottom:1rem">Choose a saint and click Generate — AI will create a beautiful 9-day novena.</p>
+    <div class="nsel" id="nsel"></div>
+    <button class="gbtn" onclick="genNovena()">✦ Generate Novena</button>
+    <div id="novout" style="margin-top:1.5rem"></div>
+  </div>
+  <div class="pan" id="pan-litany">
+    <div class="pbox"><div class="ptit">✦ Litany of All Saints</div><div class="ptxt" id="litText"></div></div>
+  </div>
+</section>
+
+<footer>Made with <span>✦</span> devotion · Saints of Light · 2026</footer>
+
+<div class="ov" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal"><button class="mclose" onclick="closeModal()">✕</button><div id="mc"></div></div>
+</div>
+
+<script>
+const CATS={
+  apostle:{l:"Apostle",c:"ca"},martyr:{l:"Martyr",c:"cm"},doctor:{l:"Doctor",c:"cd"},
+  mystic:{l:"Mystic",c:"cmy"},founder:{l:"Founder",c:"cf"},pope:{l:"Pope",c:"cp2"},
+  modern:{l:"Modern",c:"cmo"},prophet:{l:"Prophet",c:"cpr"},virgin:{l:"Virgin",c:"cv"},bishop:{l:"Bishop",c:"cbi"}
+};
+
+const S=[
+  // APOSTLES
+  {n:"St. Peter",e:"🗝️",f:"Jun 29",t:"Prince of Apostles",cat:"apostle",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Saint_Peter_by_Rubens.jpg/400px-Saint_Peter_by_Rubens.jpg"},
+  {n:"St. Paul",e:"📜",f:"Jun 29",t:"Apostle to the Gentiles",cat:"apostle",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Bartolomeo_Montagna_-_Saint_Paul_-_Google_Art_Project.jpg/400px-Bartolomeo_Montagna_-_Saint_Paul_-_Google_Art_Project.jpg"},
+  {n:"St. John the Apostle",e:"🦅",f:"Dec 27",t:"Beloved Apostle",cat:"apostle",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Guido_Reni_-_St_John_the_Evangelist.jpg/400px-Guido_Reni_-_St_John_the_Evangelist.jpg"},
+  {n:"St. Andrew",e:"✝️",f:"Nov 30",t:"First-Called Apostle",cat:"apostle",img:""},
+  {n:"St. James the Greater",e:"🐚",f:"Jul 25",t:"Son of Zebedee",cat:"apostle",img:""},
+  {n:"St. Thomas",e:"🤲",f:"Jul 3",t:"Apostle of India",cat:"apostle",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Hendrick_ter_Brugghen_-_The_Incredulity_of_Saint_Thomas.jpg/400px-Hendrick_ter_Brugghen_-_The_Incredulity_of_Saint_Thomas.jpg"},
+  {n:"St. Luke",e:"🎨",f:"Oct 18",t:"Evangelist & Physician",cat:"apostle",img:""},
+  {n:"St. Mark",e:"🦁",f:"Apr 25",t:"Evangelist",cat:"apostle",img:""},
+  {n:"St. Matthew",e:"📊",f:"Sep 21",t:"Tax Collector & Evangelist",cat:"apostle",img:""},
+  {n:"St. Philip",e:"🌾",f:"May 3",t:"Apostle of Bethsaida",cat:"apostle",img:""},
+  {n:"St. Bartholomew",e:"📖",f:"Aug 24",t:"Apostle & Martyr",cat:"apostle",img:""},
+  {n:"St. Mary Magdalene",e:"🌹",f:"Jul 22",t:"Apostle to the Apostles",cat:"apostle",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Mary_Magdalene_-_Domenico_Tintoretto.jpg/400px-Mary_Magdalene_-_Domenico_Tintoretto.jpg"},
+  {n:"St. Jude Thaddeus",e:"✝️",f:"Oct 28",t:"Patron of Hopeless Cases",cat:"apostle",img:""},
+  {n:"St. Simon the Zealot",e:"⚡",f:"Oct 28",t:"Apostle & Martyr",cat:"apostle",img:""},
+  // MARTYRS
+  {n:"St. Stephen",e:"✨",f:"Dec 26",t:"Proto-Martyr",cat:"martyr",img:""},
+  {n:"St. Joan of Arc",e:"⚔️",f:"May 30",t:"Patron of France",cat:"martyr",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Jeanne_d%27Arc_%28Simon_Charles_Miger_after_Antoine_Duflos%29.jpg/400px-Jeanne_d%27Arc_%28Simon_Charles_Miger_after_Antoine_Duflos%29.jpg"},
+  {n:"St. Sebastian",e:"🏹",f:"Jan 20",t:"Patron of Athletes",cat:"martyr",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Guido_Reni_-_Saint_Sebastian_-_WGA19282.jpg/400px-Guido_Reni_-_Saint_Sebastian_-_WGA19282.jpg"},
+  {n:"St. George",e:"🐉",f:"Apr 23",t:"Patron of England",cat:"martyr",img:""},
+  {n:"St. Perpetua",e:"🦁",f:"Mar 7",t:"Martyr of Carthage",cat:"martyr",img:""},
+  {n:"St. Agnes",e:"🐑",f:"Jan 21",t:"Virgin Martyr of Rome",cat:"martyr",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Saint_Agnes-Domenichino.jpg/400px-Saint_Agnes-Domenichino.jpg"},
+  {n:"St. Lawrence",e:"🔥",f:"Aug 10",t:"Deacon & Martyr",cat:"martyr",img:""},
+  {n:"St. Thomas More",e:"⚖️",f:"Jun 22",t:"Martyr of Conscience",cat:"martyr",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Hans_Holbein%2C_the_Younger_-_Sir_Thomas_More_-_Google_Art_Project.jpg/400px-Hans_Holbein%2C_the_Younger_-_Sir_Thomas_More_-_Google_Art_Project.jpg"},
+  {n:"St. Maximilian Kolbe",e:"💛",f:"Aug 14",t:"Martyr of Charity",cat:"martyr",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Maximilian_Kolbe.jpg/400px-Maximilian_Kolbe.jpg"},
+  {n:"St. Cecilia",e:"🎵",f:"Nov 22",t:"Patron of Music",cat:"martyr",img:""},
+  {n:"St. Lucy",e:"💡",f:"Dec 13",t:"Patron of the Blind",cat:"martyr",img:""},
+  {n:"St. Agatha",e:"🕯️",f:"Feb 5",t:"Patron of Sicily",cat:"martyr",img:""},
+  {n:"St. Thomas Becket",e:"⚔️",f:"Dec 29",t:"Archbishop & Martyr",cat:"martyr",img:""},
+  {n:"St. Charles Lwanga",e:"🔥",f:"Jun 3",t:"Martyr of Uganda",cat:"martyr",img:""},
+  {n:"St. Isaac Jogues",e:"🌿",f:"Oct 19",t:"Martyr of North America",cat:"martyr",img:""},
+  {n:"St. Boniface",e:"🪓",f:"Jun 5",t:"Apostle of Germany",cat:"martyr",img:""},
+  {n:"St. Justin Martyr",e:"📜",f:"Jun 1",t:"Philosopher & Apologist",cat:"martyr",img:""},
+  {n:"St. Edmund of East Anglia",e:"👑",f:"Nov 20",t:"King & Martyr",cat:"martyr",img:""},
+  {n:"St. Felicity",e:"🕊️",f:"Mar 7",t:"Companion of Perpetua",cat:"martyr",img:""},
+  {n:"St. Oliver Plunkett",e:"✝️",f:"Jul 1",t:"Archbishop & Martyr of Ireland",cat:"martyr",img:""},
+  {n:"St. Ignatius of Antioch",e:"🦁",f:"Oct 17",t:"Bishop & Martyr",cat:"martyr",img:""},
+  {n:"St. Polycarp",e:"🕊️",f:"Feb 23",t:"Martyr of Smyrna",cat:"martyr",img:""},
+  {n:"St. Blaise",e:"🕯️",f:"Feb 3",t:"Patron of Throat Ailments",cat:"martyr",img:""},
+  // DOCTORS
+  {n:"St. Augustine of Hippo",e:"🔥",f:"Aug 28",t:"Bishop & Doctor",cat:"doctor",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Sandro_Botticelli_050.jpg/400px-Sandro_Botticelli_050.jpg"},
+  {n:"St. Thomas Aquinas",e:"📚",f:"Jan 28",t:"Angelic Doctor",cat:"doctor",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Thomas_Aquinas_in_Regensburg.jpg/400px-Thomas_Aquinas_in_Regensburg.jpg"},
+  {n:"St. Teresa of Ávila",e:"📖",f:"Oct 15",t:"Doctor of Prayer",cat:"doctor",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Santa_Teresa_de_Jes%C3%BAs_%28FWS%29.jpg/400px-Santa_Teresa_de_Jes%C3%BAs_%28FWS%29.jpg"},
+  {n:"St. Thérèse of Lisieux",e:"🌸",f:"Oct 1",t:"The Little Flower",cat:"doctor",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Therese_de_Lisieux.jpg/400px-Therese_de_Lisieux.jpg"},
+  {n:"St. Catherine of Siena",e:"🕯️",f:"Apr 29",t:"Doctor of the Church",cat:"doctor",img:""},
+  {n:"St. Jerome",e:"🦁",f:"Sep 30",t:"Translator of the Bible",cat:"doctor",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Caravaggio_-_Saint_Jerome_Writing.jpg/400px-Caravaggio_-_Saint_Jerome_Writing.jpg"},
+  {n:"St. Ambrose",e:"🐝",f:"Dec 7",t:"Bishop of Milan",cat:"doctor",img:""},
+  {n:"St. Hildegard of Bingen",e:"🎵",f:"Sep 17",t:"Mystic Doctor & Composer",cat:"doctor",img:""},
+  {n:"St. Alphonsus Liguori",e:"📖",f:"Aug 1",t:"Patron of Confessors",cat:"doctor",img:""},
+  {n:"St. Francis de Sales",e:"🖋️",f:"Jan 24",t:"Patron of Writers",cat:"doctor",img:""},
+  {n:"St. Bonaventure",e:"📿",f:"Jul 15",t:"Seraphic Doctor",cat:"doctor",img:""},
+  {n:"St. Leo the Great",e:"✝️",f:"Nov 10",t:"Pope & Doctor",cat:"doctor",img:""},
+  {n:"St. Isidore of Seville",e:"📚",f:"Apr 4",t:"Patron of the Internet",cat:"doctor",img:""},
+  {n:"St. Gregory of Nazianzus",e:"✍️",f:"Jan 2",t:"The Theologian",cat:"doctor",img:""},
+  {n:"St. Peter Chrysologus",e:"💬",f:"Jul 30",t:"Doctor of Homilies",cat:"doctor",img:""},
+  {n:"St. Cyril of Alexandria",e:"📜",f:"Jun 27",t:"Defender of Theotokos",cat:"doctor",img:""},
+  {n:"St. Peter Canisius",e:"📜",f:"Dec 21",t:"Apostle of Germany",cat:"doctor",img:""},
+  {n:"St. Robert Bellarmine",e:"⚖️",f:"Sep 17",t:"Defender of Faith",cat:"doctor",img:""},
+  // MYSTICS
+  {n:"St. John of the Cross",e:"🌙",f:"Dec 14",t:"Dark Night of the Soul",cat:"mystic",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/John_of_the_Cross.jpg/400px-John_of_the_Cross.jpg"},
+  {n:"St. Francis of Assisi",e:"🕊️",f:"Oct 4",t:"Patron of Animals & Nature",cat:"mystic",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Giovanni_Bellini_-_St_Francis_in_the_Desert.jpg/400px-Giovanni_Bellini_-_St_Francis_in_the_Desert.jpg"},
+  {n:"St. Padre Pio",e:"✋",f:"Sep 23",t:"Stigmatist & Confessor",cat:"mystic",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Padre_Pio.jpg/400px-Padre_Pio.jpg"},
+  {n:"St. Clare of Assisi",e:"💛",f:"Aug 11",t:"Patron of Television",cat:"mystic",img:""},
+  {n:"St. Faustina Kowalska",e:"❤️",f:"Oct 5",t:"Apostle of Divine Mercy",cat:"mystic",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Swfaustyna.jpg/400px-Swfaustyna.jpg"},
+  {n:"St. Philip Neri",e:"😄",f:"May 26",t:"Apostle of Joy",cat:"mystic",img:""},
+  {n:"St. John Vianney",e:"⛪",f:"Aug 4",t:"Curé d'Ars",cat:"mystic",img:""},
+  {n:"St. Margaret Mary Alacoque",e:"❤️",f:"Oct 16",t:"Apostle of Sacred Heart",cat:"mystic",img:""},
+  {n:"St. Maria Goretti",e:"🌹",f:"Jul 6",t:"Martyr of Purity",cat:"mystic",img:""},
+  {n:"St. Rose of Lima",e:"🌹",f:"Aug 23",t:"First Saint of Americas",cat:"mystic",img:""},
+  {n:"St. Martin de Porres",e:"🌿",f:"Nov 3",t:"Patron of Social Justice",cat:"mystic",img:""},
+  {n:"St. Gemma Galgani",e:"✋",f:"Apr 11",t:"Mystic & Stigmatist",cat:"mystic",img:""},
+  {n:"Bl. Julian of Norwich",e:"🌿",f:"May 13",t:"Mystic & Anchoress",cat:"mystic",img:""},
+  {n:"St. Gertrude the Great",e:"🌺",f:"Nov 16",t:"Mystic of Helfta",cat:"mystic",img:""},
+  {n:"St. Elizabeth of the Trinity",e:"🕊️",f:"Nov 8",t:"Carmelite Mystic",cat:"mystic",img:""},
+  {n:"St. Angela of Foligno",e:"✝️",f:"Jan 7",t:"Teacher of Theologians",cat:"mystic",img:""},
+  {n:"St. Catherine of Genoa",e:"🏥",f:"Sep 15",t:"Mystic & Hospital Worker",cat:"mystic",img:""},
+  // FOUNDERS
+  {n:"St. Benedict",e:"📿",f:"Jul 11",t:"Father of Western Monasticism",cat:"founder",img:""},
+  {n:"St. Dominic",e:"🐕",f:"Aug 8",t:"Founder of Dominicans",cat:"founder",img:""},
+  {n:"St. Ignatius of Loyola",e:"⚜️",f:"Jul 31",t:"Founder of Jesuits",cat:"founder",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Ignatius_Loyola_%28Ja%C3%BAregui%29.jpg/400px-Ignatius_Loyola_%28Ja%C3%BAregui%29.jpg"},
+  {n:"St. Anthony the Great",e:"🏜️",f:"Jan 17",t:"Father of Monasticism",cat:"founder",img:""},
+  {n:"St. Basil the Great",e:"🕊️",f:"Jan 2",t:"Father of Eastern Monasticism",cat:"founder",img:""},
+  {n:"St. Vincent de Paul",e:"🤝",f:"Sep 27",t:"Patron of Charitable Works",cat:"founder",img:""},
+  {n:"St. Anthony of Padua",e:"🍞",f:"Jun 13",t:"Patron of Lost Things",cat:"founder",img:""},
+  {n:"St. John Bosco",e:"🎓",f:"Jan 31",t:"Patron of Youth",cat:"founder",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/JohnBosco.jpg/400px-JohnBosco.jpg"},
+  {n:"St. Elizabeth Ann Seton",e:"📖",f:"Jan 4",t:"First American-Born Saint",cat:"founder",img:""},
+  {n:"St. John of God",e:"🏥",f:"Mar 8",t:"Patron of Hospitals",cat:"founder",img:""},
+  {n:"St. Camillus de Lellis",e:"🏥",f:"Jul 14",t:"Patron of Nurses",cat:"founder",img:""},
+  {n:"St. Louise de Marillac",e:"🤲",f:"Mar 15",t:"Daughters of Charity",cat:"founder",img:""},
+  {n:"St. Bruno of Cologne",e:"🏔️",f:"Oct 6",t:"Founder of Carthusians",cat:"founder",img:""},
+  {n:"St. Julie Billiart",e:"📖",f:"Apr 8",t:"Notre Dame Sisters",cat:"founder",img:""},
+  {n:"St. Francis Xavier",e:"🌊",f:"Dec 3",t:"Patron of Missions",cat:"founder",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Francis_Xavier.jpg/400px-Francis_Xavier.jpg"},
+  {n:"St. Norbert",e:"🌿",f:"Jun 6",t:"Founder of Premonstratensians",cat:"founder",img:""},
+  {n:"St. Peter Nolasco",e:"🔓",f:"Jan 28",t:"Founder of Mercedarians",cat:"founder",img:""},
+  // POPES
+  {n:"St. Gregory the Great",e:"🕊️",f:"Sep 3",t:"Pope, Doctor & Reformer",cat:"pope",img:""},
+  {n:"St. John Paul II",e:"✝️",f:"Oct 22",t:"Pope & Pilgrim",cat:"pope",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/John_Paul_II_in_Krakow_1979.jpg/400px-John_Paul_II_in_Krakow_1979.jpg"},
+  {n:"St. John XXIII",e:"🌍",f:"Oct 11",t:"Good Pope John",cat:"pope",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Pope_John_XXIII_-_1959.jpg/400px-Pope_John_XXIII_-_1959.jpg"},
+  {n:"St. Pius V",e:"📿",f:"Apr 30",t:"Pope of Lepanto",cat:"pope",img:""},
+  {n:"St. Pius X",e:"☦️",f:"Aug 21",t:"Pope of the Eucharist",cat:"pope",img:""},
+  {n:"St. Clement I",e:"⚓",f:"Nov 23",t:"Third Pope & Martyr",cat:"pope",img:""},
+  {n:"St. Celestine V",e:"🏔️",f:"May 19",t:"Hermit Pope",cat:"pope",img:""},
+  {n:"St. Nicholas I",e:"🌍",f:"Nov 13",t:"Pope the Great",cat:"pope",img:""},
+  {n:"St. Damasus I",e:"📜",f:"Dec 11",t:"Patron of Archives",cat:"pope",img:""},
+  {n:"St. Innocent I",e:"🕊️",f:"Mar 12",t:"Defender of Papal Authority",cat:"pope",img:""},
+  // MODERN
+  {n:"St. Mother Teresa",e:"🤲",f:"Sep 5",t:"Patron of the Poor",cat:"modern",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Mother_Teresa_1.jpg/400px-Mother_Teresa_1.jpg"},
+  {n:"St. Óscar Romero",e:"🕊️",f:"Mar 24",t:"Archbishop & Martyr",cat:"modern",img:""},
+  {n:"Bl. Pier Giorgio Frassati",e:"⛰️",f:"Jul 4",t:"Man of the Beatitudes",cat:"modern",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Pier_Giorgio_Frassati.jpg/400px-Pier_Giorgio_Frassati.jpg"},
+  {n:"St. Josephine Bakhita",e:"🌟",f:"Feb 8",t:"From Slavery to Sainthood",cat:"modern",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Josephine_Bakhita.jpg/400px-Josephine_Bakhita.jpg"},
+  {n:"Bl. Carlo Acutis",e:"💻",f:"Oct 12",t:"Patron of the Internet",cat:"modern",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Carlo_Acutis.jpg/400px-Carlo_Acutis.jpg"},
+  {n:"St. Edith Stein",e:"✡️",f:"Aug 9",t:"Co-Patron of Europe",cat:"modern",img:""},
+  {n:"St. Gianna Beretta Molla",e:"👶",f:"Apr 28",t:"Patron of Mothers",cat:"modern",img:""},
+  {n:"St. Damien of Molokai",e:"🌺",f:"May 10",t:"Apostle of the Lepers",cat:"modern",img:""},
+  {n:"St. Alphonsa",e:"🌸",f:"Jul 28",t:"First Female Saint of India",cat:"modern",img:""},
+  {n:"St. Mariam Thresia",e:"🙏",f:"Jun 8",t:"Kerala's Mystic Saint",cat:"modern",img:""},
+  {n:"Bl. Chiara Badano",e:"🌟",f:"Oct 29",t:"Young Blessed",cat:"modern",img:""},
+  {n:"St. Alberto Hurtado",e:"🤲",f:"Aug 18",t:"Apostle of Chile",cat:"modern",img:""},
+  {n:"St. Maximilian Kolbe",e:"💛",f:"Aug 14",t:"Martyr of Auschwitz",cat:"modern",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Maximilian_Kolbe.jpg/400px-Maximilian_Kolbe.jpg"},
+  // PROPHETS
+  {n:"St. Patrick",e:"☘️",f:"Mar 17",t:"Patron of Ireland",cat:"prophet",img:""},
+  {n:"St. Nicholas",e:"🎁",f:"Dec 6",t:"Patron of Children",cat:"prophet",img:""},
+  {n:"St. Bernadette",e:"💧",f:"Apr 16",t:"Visionary of Lourdes",cat:"prophet",img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Bernadette_Soubirous_1858.jpg/400px-Bernadette_Soubirous_1858.jpg"},
+  {n:"St. Juan Diego",e:"🌺",f:"Dec 9",t:"Visionary of Guadalupe",cat:"prophet",img:""},
+  {n:"St. Kateri Tekakwitha",e:"🌿",f:"Jul 14",t:"Lily of the Mohawks",cat:"prophet",img:""},
+  {n:"St. Brigid of Ireland",e:"🌿",f:"Feb 1",t:"Mary of the Gaels",cat:"prophet",img:""},
+  {n:"St. Cyril & Methodius",e:"📖",f:"Feb 14",t:"Apostles of the Slavs",cat:"prophet",img:""},
+  {n:"St. Columba",e:"🕊️",f:"Jun 9",t:"Apostle of Scotland",cat:"prophet",img:""},
+  {n:"St. Brendan",e:"⛵",f:"May 16",t:"Patron of Sailors",cat:"prophet",img:""},
+  {n:"St. Margaret of Scotland",e:"📿",f:"Nov 16",t:"Queen & Reformer",cat:"prophet",img:""},
+  {n:"St. Wenceslaus",e:"👑",f:"Sep 28",t:"Patron of Bohemia",cat:"prophet",img:""},
+  {n:"St. Casimir",e:"👑",f:"Mar 4",t:"Patron of Poland",cat:"prophet",img:""},
+  {n:"St. Olaf II",e:"⚔️",f:"Jul 29",t:"Patron of Norway",cat:"prophet",img:""},
+  {n:"St. Ansgar",e:"✝️",f:"Feb 3",t:"Apostle of the North",cat:"prophet",img:""},
+  {n:"St. Willibrord",e:"🌊",f:"Nov 7",t:"Apostle of Frisia",cat:"prophet",img:""},
+  // VIRGINS
+  {n:"St. Scholastica",e:"📿",f:"Feb 10",t:"Sister of St. Benedict",cat:"virgin",img:""},
+  {n:"St. Dymphna",e:"🌷",f:"May 15",t:"Patron of Mental Health",cat:"virgin",img:""},
+  {n:"St. Mary of Egypt",e:"🌵",f:"Apr 1",t:"Penitent of the Desert",cat:"virgin",img:""},
+  {n:"St. Macrina the Younger",e:"📖",f:"Jul 19",t:"Teacher of Gregory of Nyssa",cat:"virgin",img:""},
+  {n:"St. Helen",e:"✝️",f:"Aug 18",t:"Discoverer of True Cross",cat:"virgin",img:""},
+  {n:"St. Etheldreda",e:"🌿",f:"Jun 23",t:"Abbess of Ely",cat:"virgin",img:""},
+  {n:"St. Ursula",e:"⚓",f:"Oct 21",t:"Patron of Young Students",cat:"virgin",img:""},
+  {n:"St. Thecla",e:"🔥",f:"Sep 23",t:"Proto-Martyr among Women",cat:"virgin",img:""},
+  {n:"St. Zita of Lucca",e:"🗝️",f:"Apr 27",t:"Patron of Domestic Workers",cat:"virgin",img:""},
+  {n:"St. Lydwine of Schiedam",e:"🕊️",f:"Apr 14",t:"Patron of Sufferers",cat:"virgin",img:""},
+  {n:"St. Bridget of Sweden",e:"📜",f:"Jul 23",t:"Co-Patron of Europe",cat:"virgin",img:""},
+  {n:"St. Pulcheria",e:"👑",f:"Sep 10",t:"Empress & Defender of Faith",cat:"virgin",img:""},
+  {n:"St. Angela of Foligno",e:"✝️",f:"Jan 7",t:"Teacher of Theologians",cat:"virgin",img:""},
+  {n:"St. Dorothea of Caesarea",e:"🌸",f:"Feb 6",t:"Patron of Gardeners",cat:"virgin",img:""},
+  {n:"St. Solange",e:"🌿",f:"May 10",t:"Patron of Berry, France",cat:"virgin",img:""},
+  // BISHOPS
+  {n:"St. Athanasius",e:"⚓",f:"May 2",t:"Champion of Orthodoxy",cat:"bishop",img:""},
+  {n:"St. John Chrysostom",e:"💬",f:"Sep 13",t:"Golden Mouthed",cat:"bishop",img:""},
+  {n:"St. Cyprian",e:"🌿",f:"Sep 16",t:"Bishop of Carthage",cat:"bishop",img:""},
+  {n:"St. Martin of Tours",e:"⚔️",f:"Nov 11",t:"Apostle of Gaul",cat:"bishop",img:""},
+  {n:"St. Remigius",e:"🕊️",f:"Oct 1",t:"Apostle of the Franks",cat:"bishop",img:""},
+  {n:"St. Cuthbert",e:"🦦",f:"Mar 20",t:"Apostle of Northumbria",cat:"bishop",img:""},
+  {n:"St. Nicholas of Myra",e:"🎁",f:"Dec 6",t:"Wonderworker Bishop",cat:"bishop",img:""},
+  {n:"St. Paulinus of Nola",e:"🔔",f:"Jun 22",t:"Inventor of Church Bells",cat:"bishop",img:""},
+  {n:"St. John Neumann",e:"🌊",f:"Jan 5",t:"Bishop of Philadelphia",cat:"bishop",img:""},
+  {n:"St. Bede the Venerable",e:"📖",f:"May 25",t:"Father of English History",cat:"bishop",img:""},
+  {n:"St. Hilary of Poitiers",e:"✝️",f:"Jan 13",t:"Hammer of the Arians",cat:"bishop",img:""},
+  {n:"St. Peter Damian",e:"🏔️",f:"Feb 21",t:"Reformer Bishop",cat:"bishop",img:""},
+  {n:"St. Toribio Alfonso Mogrovejo",e:"✝️",f:"Mar 23",t:"Archbishop of Lima",cat:"bishop",img:""},
+  {n:"St. Caesarius of Arles",e:"📜",f:"Aug 27",t:"First Archbishop of Arles",cat:"bishop",img:""},
+  {n:"St. Germanus of Auxerre",e:"🛡️",f:"Jul 31",t:"Apostle of Britain",cat:"bishop",img:""},
+  {n:"St. Gregory of Nyssa",e:"📖",f:"Jan 10",t:"Mystical Theologian",cat:"bishop",img:""},
+  {n:"St. Stanislaus",e:"⚔️",f:"Apr 11",t:"Patron of Poland",cat:"bishop",img:""},
+  {n:"St. Vincent Ferrer",e:"🌊",f:"Apr 5",t:"Angel of Judgement",cat:"bishop",img:""},
+  {n:"St. Frumentius",e:"🌍",f:"Oct 27",t:"Apostle of Ethiopia",cat:"bishop",img:""},
+  {n:"St. Thomas of Villanova",e:"🤲",f:"Sep 22",t:"Father of the Poor",cat:"bishop",img:""},
+  {n:"St. Adalbert",e:"✝️",f:"Apr 23",t:"Apostle of Bohemia",cat:"bishop",img:""},
+  {n:"St. Fulgentius of Ruspe",e:"📜",f:"Jan 1",t:"Bishop & Theologian",cat:"bishop",img:""},
+  {n:"St. Epiphanius of Salamis",e:"⚔️",f:"May 12",t:"Defender Against Heresies",cat:"bishop",img:""},
+  {n:"St. Paulinus of York",e:"✝️",f:"Oct 10",t:"First Archbishop of York",cat:"bishop",img:""},
+];
+
+// dedupe
+const saints = S.filter((s,i,a)=>a.findIndex(x=>x.n===s.n)===i);
+
+// ── SOTD ────────────────────────────────────────────────────
+(function(){
+  const d=new Date(), s=saints[(d.getDate()*13+d.getMonth()*7)%saints.length];
+  const wrap=document.getElementById('sotdImg');
+  if(s.img){
+    const im=document.createElement('img'); im.className='sotd-img'; im.src=s.img; im.alt=s.n;
+    im.onerror=()=>{ const ph=document.createElement('div'); ph.className='sotd-ph'; ph.textContent=s.e; im.replaceWith(ph); };
+    wrap.replaceWith(im);
+  } else wrap.textContent=s.e;
+  document.getElementById('sotdName').textContent=s.n;
+  document.getElementById('sotdFeast').textContent='✦ Feast: '+s.f+' · '+s.t;
+  document.getElementById('sotdSnip').textContent='Today the Church celebrates '+s.n+', '+s.t+'. Click to read their full inspiring story.';
+  document.getElementById('sotdBtn').onclick=()=>openModal(s.n);
+})();
+
+// ── FILTERS ─────────────────────────────────────────────────
+let activeF='all';
+(function(){
+  const fw=document.getElementById('filters');
+  const mk=(lbl,cat)=>{
+    const b=document.createElement('button'); b.className='fb'+(cat==='all'?' on':'');
+    b.textContent=lbl;
+    b.onclick=()=>{ document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on')); b.classList.add('on'); activeF=cat; render(); };
+    fw.appendChild(b);
+  };
+  mk('All','all'); Object.entries(CATS).forEach(([k,v])=>mk(v.l,k));
+})();
+
+function render(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const list=saints.filter(s=>(activeF==='all'||s.cat===activeF)&&(!q||s.n.toLowerCase().includes(q)||s.t.toLowerCase().includes(q)||s.f.toLowerCase().includes(q)));
+  document.getElementById('clbl').textContent=`Showing ${list.length} of ${saints.length} saints`;
+  document.getElementById('grid').innerHTML=list.map(s=>{
+    const c=CATS[s.cat];
+    const img=s.img
+      ?`<img class="ci" src="${s.img}" alt="${s.n}" loading="lazy" onerror="this.outerHTML='<div class=cp>${s.e}</div>'">`
+      :`<div class="cp">${s.e}</div>`;
+    const key=s.n.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    return `<div class="sc" onclick="openModal('${key}')">
+      ${img}<div class="cb"><span class="cb-cat ${c.c}">${c.l}</span>
+      <div class="cb-name">${s.n}</div><div class="cb-feast">Feast: ${s.f}</div>
+      <div class="cb-tag">${s.t}</div></div></div>`;
+  }).join('');
+}
+function filterSaints(){ render(); }
+
+// ── AI CALL ──────────────────────────────────────────────────
+async function aiCall(prompt){
+  const r=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      model:"claude-sonnet-4-20250514",
+      max_tokens:900,
+      system:"You are a Catholic biographer. Return ONLY a valid JSON object — no markdown, no backticks, no explanation, just the raw JSON.",
+      messages:[{role:"user",content:prompt}]
+    })
+  });
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  const d=await r.json();
+  if(d.error) throw new Error(d.error.message);
+  const raw=d.content.map(x=>x.type==='text'?x.text:'').join('').trim()
+    .replace(/^```(?:json)?\n?/i,'').replace(/\n?```$/,'').trim();
+  return JSON.parse(raw);
+}
+
+// ── MODAL ────────────────────────────────────────────────────
+async function openModal(name){
+  const s=saints.find(x=>x.n===name); if(!s) return;
+  const c=CATS[s.cat];
+  document.getElementById('modal').classList.add('on');
+  document.body.style.overflow='hidden';
+  const imgH=s.img
+    ?`<img src="${s.img}" alt="${s.n}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<div class=mhph>${s.e}</div>'">`
+    :`<div class="mhph">${s.e}</div>`;
+  document.getElementById('mc').innerHTML=`
+    <div class="mh">${imgH}<div class="mhov"></div>
+      <div class="mhinfo"><div class="mhname">${s.n}</div><div class="mhfeast">✦ Feast: ${s.f}</div></div>
+    </div>
+    <div class="mbody"><span class="cb-cat ${c.c}">${c.l}</span>
+      <div class="spin-wrap"><div class="spin"></div><p style="margin-top:.5rem">Loading story…</p></div>
+    </div>`;
+  try{
+    const d=await aiCall(`Write the inspiring life story of ${s.n} (Feast: ${s.f}, known as: ${s.t}).
+Return this exact JSON object:
+{"quote":"A famous quote by or about this saint","birth":"Early life and background (3-4 sentences)","calling":"Their spiritual calling or conversion (3-4 sentences)","trials":"Major challenges and sufferings (3-4 sentences)","miracles":"Miracles and remarkable deeds (3-4 sentences)","legacy":"Their lasting impact (3-4 sentences)","message":"A personal spiritual message for readers today (2 sentences)","birthYear":"e.g. c.1182 or 1st century","deathYear":"e.g. 1226","origin":"Country or region"}`);
+    document.querySelector('#mc .mbody').innerHTML=`
+      <span class="cb-cat ${c.c}">${c.l}</span>
+      <div class="mquote">"${d.quote}"</div>
+      <div class="ss"><h4>🕊️ Early Life</h4><p>${d.birth}</p></div>
+      <div class="ss"><h4>✨ The Calling</h4><p>${d.calling}</p></div>
+      <div class="ss"><h4>⚔️ Trials & Sufferings</h4><p>${d.trials}</p></div>
+      <div class="ss"><h4>🌟 Miracles & Deeds</h4><p>${d.miracles}</p></div>
+      <div class="ss"><h4>📖 Legacy</h4><p>${d.legacy}</p></div>
+      <div class="ss" style="background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:1rem">
+        <h4>💛 For You Today</h4><p>${d.message}</p></div>
+      <div class="mfacts">
+        <div class="fb2"><div class="fl">Born</div><div class="fv">${d.birthYear||'—'}</div></div>
+        <div class="fb2"><div class="fl">Died</div><div class="fv">${d.deathYear||'—'}</div></div>
+        <div class="fb2"><div class="fl">Origin</div><div class="fv">${d.origin||'—'}</div></div>
+        <div class="fb2"><div class="fl">Feast Day</div><div class="fv">${s.f}</div></div>
+      </div>`;
+  }catch(err){
+    document.querySelector('#mc .mbody').innerHTML=`
+      <span class="cb-cat ${c.c}">${c.l}</span>
+      <div style="background:#2d1a1a;border:1px solid #f87171;border-radius:10px;padding:1.2rem;margin:1rem 0;color:#fca5a5;font-size:.85rem;line-height:1.7">
+        <strong>Could not load story.</strong> Please tap the card again to retry.<br>
+        <small style="opacity:.7">${err.message}</small>
+      </div>
+      <div class="mfacts">
+        <div class="fb2"><div class="fl">Category</div><div class="fv">${c.l}</div></div>
+        <div class="fb2"><div class="fl">Feast Day</div><div class="fv">${s.f}</div></div>
+      </div>`;
+  }
+}
+function closeModal(){ document.getElementById('modal').classList.remove('on'); document.body.style.overflow=''; }
+
+// ── NOVENA ───────────────────────────────────────────────────
+let selN='St. Francis of Assisi';
+['St. Francis of Assisi','St. Teresa of Ávila','St. Mother Teresa','St. John Paul II',
+ 'St. Anthony of Padua','St. Padre Pio','St. Thérèse of Lisieux','St. Faustina Kowalska',
+ 'St. Ignatius of Loyola','St. John Bosco','St. Mary Magdalene','St. Joseph'].forEach((n,i)=>{
+  const b=document.createElement('button'); b.className='nsb'+(i===0?' on':''); b.textContent=n;
+  b.onclick=()=>{ document.querySelectorAll('.nsb').forEach(x=>x.classList.remove('on')); b.classList.add('on'); selN=n; };
+  document.getElementById('nsel').appendChild(b);
+});
+
+async function genNovena(){
+  const out=document.getElementById('novout');
+  out.innerHTML=`<div class="spin-wrap"><div class="spin"></div><p>Generating novena for ${selN}…</p></div>`;
+  try{
+    const d=await aiCall(`Write a 9-day novena for ${selN}.
+Return this exact JSON:
+{"title":"Novena to [Saint Name]","intro":"Opening prayer (2-3 sentences)","days":[{"day":1,"theme":"Theme","prayer":"Prayer text (3-4 sentences)"},{"day":2,"theme":"...","prayer":"..."},{"day":3,"theme":"...","prayer":"..."},{"day":4,"theme":"...","prayer":"..."},{"day":5,"theme":"...","prayer":"..."},{"day":6,"theme":"...","prayer":"..."},{"day":7,"theme":"...","prayer":"..."},{"day":8,"theme":"...","prayer":"..."},{"day":9,"theme":"...","prayer":"..."}],"closing":"Closing prayer (2-3 sentences)"}`);
+    out.innerHTML=`<div class="pbox"><div class="ptit">✦ ${d.title}</div><div class="ptxt">${d.intro}</div></div>`
+      +d.days.map(day=>`<div class="nday" onclick="this.classList.toggle('open')">
+        <div class="nday-hd"><div><div class="nday-t">Day ${day.day}: ${day.theme}</div><div class="nday-s">Tap to expand</div></div><span style="color:var(--ac)">▾</span></div>
+        <div class="nday-body">${day.prayer}</div></div>`).join('')
+      +`<div class="pbox" style="margin-top:.5rem"><div class="ptit">✦ Closing Prayer</div><div class="ptxt">${d.closing}</div></div>`;
+  }catch(err){
+    out.innerHTML=`<div style="background:#2d1a1a;border:1px solid #f87171;border-radius:10px;padding:1.2rem;color:#fca5a5;font-size:.85rem">Could not generate novena. Please try again.<br><small>${err.message}</small></div>`;
+  }
+}
+
+// ── LITANY ───────────────────────────────────────────────────
+document.getElementById('litText').innerHTML=
+  `<em>Lord, have mercy. Christ, have mercy. Lord, have mercy.</em><br><br>`
+  +saints.slice(0,60).map(s=>`<em>${s.n},</em> pray for us.`).join('<br>')
+  +`<br><br><em>Lamb of God, who takes away the sins of the world, spare us O Lord.<br>Lamb of God, who takes away the sins of the world, graciously hear us.<br>Lamb of God, who takes away the sins of the world, have mercy on us. Amen.</em>`;
+
+// ── TABS ────────────────────────────────────────────────────
+function showTab(id,btn){
+  document.querySelectorAll('.pan').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.pt').forEach(t=>t.classList.remove('on'));
+  document.getElementById('pan-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
